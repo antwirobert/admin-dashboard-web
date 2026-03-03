@@ -24,6 +24,8 @@ import { Home } from "lucide-react";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import { authProvider } from "./providers/auth";
+import OrdersList from "./pages/orders/list";
+import { dataProvider } from "./providers/data";
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
           <DevtoolsProvider>
             <Refine
               authProvider={authProvider}
+              dataProvider={dataProvider}
               notificationProvider={useNotificationProvider()}
               routerProvider={routerProvider}
               options={{
@@ -45,6 +48,11 @@ function App() {
                   name: "dashboard",
                   list: "/",
                   meta: { label: "Dashboard", icon: <Home /> },
+                },
+                {
+                  name: "orders",
+                  list: "/orders",
+                  meta: { label: "Orders" },
                 },
               ]}
             >
@@ -69,6 +77,7 @@ function App() {
                   }
                 >
                   <Route index element={<Dashboard />} />
+                  <Route path="/orders" element={<OrdersList />} />
                 </Route>
               </Routes>
               <Toaster />

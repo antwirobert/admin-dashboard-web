@@ -18,3 +18,20 @@ export type User = {
   name: string;
   role: UserRole;
 };
+
+export type Order = {
+  id: string;
+  status: string;
+  totalAmount: number;
+  createdAt: string;
+};
+
+export type ListResponse<T = unknown> = {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    toal: number;
+    totalPages: number;
+  };
+};
