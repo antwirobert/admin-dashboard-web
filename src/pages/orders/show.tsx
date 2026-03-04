@@ -43,7 +43,7 @@ const getStatusConfig = (status: string) => {
       label: "Processing",
       variant: "default",
       icon: Package,
-      color: "text-white",
+      color: "text-white dark:text-black",
     },
     completed: {
       label: "Completed",

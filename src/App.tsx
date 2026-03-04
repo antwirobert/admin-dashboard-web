@@ -1,9 +1,4 @@
-import {
-  Authenticated,
-  GitHubBanner,
-  Refine,
-  WelcomePage,
-} from "@refinedev/core";
+import { Authenticated, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
@@ -19,7 +14,7 @@ import { useNotificationProvider } from "./components/refine-ui/notification/use
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 
 import { Layout } from "./components/refine-ui/layout/layout";
-import { Home, ShoppingCart } from "lucide-react";
+import { Home, PackageCheck, ShoppingCart } from "lucide-react";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import { authProvider } from "./providers/auth";
@@ -43,6 +38,10 @@ function App() {
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
                 projectId: "EQRbgX-gkKNCZ-t8JjZp",
+                title: {
+                  text: "OrderFlow",
+                  icon: <PackageCheck />,
+                },
               }}
               resources={[
                 {

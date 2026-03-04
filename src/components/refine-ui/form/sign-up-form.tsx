@@ -32,6 +32,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { PackageCheck } from "lucide-react";
 
 const userSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -104,18 +105,11 @@ export const SignUpForm = () => {
         "min-h-svh",
       )}
     >
-      <img src="/logo.svg" alt="Logo" width={70} height={70} loading="lazy" />
+      <PackageCheck className="size-16" />
 
       <Card className={cn("sm:w-114", "p-12", "mt-6")}>
         <CardHeader className={cn("px-0")}>
-          <CardTitle
-            className={cn(
-              "text-blue-600",
-              "dark:text-blue-400",
-              "text-3xl",
-              "font-semibold",
-            )}
-          >
+          <CardTitle className={cn("text-3xl", "font-semibold")}>
             OrderFlow
           </CardTitle>
           <CardDescription
@@ -207,11 +201,7 @@ export const SignUpForm = () => {
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full bg-blue-600"
-                disabled={isRegistering}
-              >
+              <Button type="submit" className="w-full" disabled={isRegistering}>
                 {isRegistering ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
@@ -223,7 +213,7 @@ export const SignUpForm = () => {
             <span className={cn("text-sm", "text-muted-foreground")}>
               Have an account?{" "}
             </span>
-            <Link to="/login" className="text-blue-600 underline font-semibold">
+            <Link to="/login" className="underline font-semibold">
               Sign in
             </Link>
           </div>

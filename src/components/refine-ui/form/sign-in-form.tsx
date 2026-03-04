@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -8,13 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -30,6 +24,7 @@ import { useLink, useLogin } from "@refinedev/core";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PackageCheck } from "lucide-react";
 
 const userSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -70,18 +65,11 @@ export const SignInForm = () => {
         "min-h-svh",
       )}
     >
-      <img src="/logo.svg" alt="Logo" width={70} height={70} loading="lazy" />
+      <PackageCheck className="size-16" />
 
       <Card className={cn("sm:w-114", "p-12", "mt-6")}>
         <CardHeader className={cn("px-0")}>
-          <CardTitle
-            className={cn(
-              "text-blue-600",
-              "dark:text-blue-400",
-              "text-3xl",
-              "font-semibold",
-            )}
-          >
+          <CardTitle className={cn("text-3xl", "font-semibold")}>
             Sign in to OrderFlow
           </CardTitle>
           <CardDescription
@@ -133,11 +121,7 @@ export const SignInForm = () => {
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full bg-blue-600"
-                disabled={isLoggingIn}
-              >
+              <Button type="submit" className="w-full" disabled={isLoggingIn}>
                 {isLoggingIn ? "Signing in..." : "Sign in"}
               </Button>
             </form>
@@ -149,10 +133,7 @@ export const SignInForm = () => {
             <span className={cn("text-sm", "text-muted-foreground")}>
               Don't have an account?{" "}
             </span>
-            <Link
-              to="/register"
-              className="text-blue-600 underline font-semibold"
-            >
+            <Link to="/register" className="underline font-semibold">
               Sign up
             </Link>
           </div>
