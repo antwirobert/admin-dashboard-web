@@ -4,16 +4,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import {
-  useActiveAuthProvider,
-  useLogout,
-  useRefineOptions,
-} from "@refinedev/core";
+import { useGetIdentity, useLogout, useRefineOptions } from "@refinedev/core";
 import { LogOutIcon } from "lucide-react";
+import type { User } from "@/types";
 
 export const Header = () => {
   const { isMobile } = useSidebar();
@@ -37,7 +35,7 @@ function DesktopHeader() {
         "bg-sidebar",
         "pr-3",
         "justify-end",
-        "z-40"
+        "z-40",
       )}
     >
       <ThemeToggle />
@@ -66,7 +64,7 @@ function MobileHeader() {
         "bg-sidebar",
         "pr-3",
         "justify-between",
-        "z-40"
+        "z-40",
       )}
     >
       <SidebarTrigger
@@ -89,10 +87,11 @@ function MobileHeader() {
           "gap-2",
           "transition-discrete",
           "duration-200",
+          "max-sm:hidden",
           {
             "pl-3": !open,
             "pl-5": open,
-          }
+          },
         )}
       >
         <div>{title.icon}</div>
@@ -102,36 +101,51 @@ function MobileHeader() {
             "font-bold",
             "transition-opacity",
             "duration-200",
+            "max-sm:hidden",
             {
               "opacity-0": !open,
               "opacity-100": open,
-            }
+            },
           )}
         >
           {title.text}
         </h2>
       </div>
 
-      <ThemeToggle className={cn("h-8", "w-8")} />
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        <UserDropdown />
+      </div>
     </header>
   );
 }
 
 const UserDropdown = () => {
+  const { data: user } = useGetIdentity<User>();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
-
-  const authProvider = useActiveAuthProvider();
-
-  if (!authProvider?.getIdentity) {
-    return null;
-  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-64">
+        <div className="px-3 py-2">
+          <p className="text-sm font-semibold">
+            {user?.name ?? "Signed in user"}
+          </p>
+          {user?.email && (
+            <p className="text-xs text-muted-foreground truncate">
+              {user.email}
+            </p>
+          )}
+          {user?.role && (
+            <span className="mt-2 inline-flex items-center rounded-sm bg-muted px-2 py-0.5 text-xs font-semibold uppercase text-muted-foreground">
+              {user.role}
+            </span>
+          )}
+        </div>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
             logout();

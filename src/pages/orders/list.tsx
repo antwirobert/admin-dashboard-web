@@ -2,15 +2,14 @@ import { CreateButton } from "@/components/refine-ui/buttons/create";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
-import {
-  ListView,
-  ListViewHeader,
-} from "@/components/refine-ui/views/list-view";
+import { ListView } from "@/components/refine-ui/views/list-view";
 import SearchInput from "@/components/search-input";
 import StatusFilter from "@/components/status-filter";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Order } from "@/types";
+import { useApiUrl } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -18,17 +17,25 @@ import {
   ArrowUpRight,
   CheckCircle2,
   Clock,
-  CreditCard,
+  Download,
   Package,
   XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const OrdersList = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const apiUrl = useApiUrl();
 
-  // const searchFilters = searchQuery ? [{ field: "id", operator: "contains" as const, value: searchQuery }]
+  const searchFilters = searchQuery
+    ? [{ field: "id", operator: "contains" as const, value: searchQuery }]
+    : [];
+
+  const statusFilters =
+    selectedStatus !== "all"
+      ? [{ field: "status", operator: "eq" as const, value: selectedStatus }]
+      : [];
 
   const ordersTable = useTable<Order>({
     columns: useMemo<ColumnDef<Order>[]>(
@@ -43,6 +50,7 @@ const OrdersList = () => {
               #{getValue<string | number>()}
             </div>
           ),
+          filterFn: "includesString",
         },
 
         {
@@ -181,7 +189,7 @@ const OrdersList = () => {
       resource: "orders",
       pagination: { mode: "server", pageSize: 10 },
       filters: {
-        permanent: [],
+        permanent: [...searchFilters, ...statusFilters],
       },
       sorters: {
         initial: [{ field: "id", order: "desc" }],
@@ -201,12 +209,29 @@ const OrdersList = () => {
           </p>
         </div>
 
-        <CreateButton resource="orders" />
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={() => {
+            const url = `${apiUrl}/orders/export/csv`;
+            window.open(url, "_blank");
+          }}
+        >
+          <Download className="h-4 w-4" />
+          Export CSV
+        </Button>
       </div>
 
       <div className="flex flex-1 items-center gap-3">
-        <SearchInput />
-        <StatusFilter />
+        <SearchInput
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+        <StatusFilter
+          setStatusFilter={setSelectedStatus}
+          statusFilter={selectedStatus}
+        />
       </div>
       <DataTable table={ordersTable} />
     </ListView>

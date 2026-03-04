@@ -3,6 +3,7 @@ import {
   ShowViewHeader,
 } from "@/components/refine-ui/views/show-view";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,10 +13,18 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { Order } from "@/types";
-import { useShow } from "@refinedev/core";
+import { Order, User } from "@/types";
+import { useGetIdentity, useShow, useUpdate } from "@refinedev/core";
 import { format } from "date-fns";
-import { Calendar, CheckCircle2, Clock, Package, XCircle } from "lucide-react";
+import {
+  Calendar,
+  CheckCircle2,
+  Clock,
+  Loader2,
+  Package,
+  XCircle,
+} from "lucide-react";
+import { useParams } from "react-router";
 
 const getStatusConfig = (status: string) => {
   const lower = status?.toLowerCase() || "unknown";
@@ -61,9 +70,18 @@ const getStatusConfig = (status: string) => {
     }
   );
 };
-
 const OrdersShow = () => {
+  const { id } = useParams();
+  const orderId = id ?? "";
+
+  const { data: user } = useGetIdentity<User>();
   const { query: ordersQuery } = useShow<Order>({ resource: "orders" });
+  const {
+    mutate: updateStatus,
+    mutation: { isPending: isUpdating },
+  } = useUpdate({
+    resource: "orders",
+  });
 
   const orders = ordersQuery.data?.data;
   const isLoading = ordersQuery.isLoading;
@@ -84,6 +102,16 @@ const OrdersShow = () => {
     </Badge>
   );
 
+  const handleUpdateStatus = async (newStatus: string) => {
+    updateStatus({
+      id: orderId,
+      values: {
+        status: newStatus,
+        userId: user?.id,
+      },
+    });
+  };
+
   return (
     <ShowView>
       <ShowViewHeader resource="orders" title="Order Details" />
@@ -103,6 +131,7 @@ const OrdersShow = () => {
             </CardTitle>
             <CardDescription>Key information at a glance</CardDescription>
           </CardHeader>
+
           <CardContent className="space-y-4">
             {isLoading ? (
               <>
@@ -128,6 +157,58 @@ const OrdersShow = () => {
                       : "—"}
                   </span>
                 </div>
+
+                {!isLoading && orders && (
+                  <div className="pt-5 border-t mt-2">
+                    <p className="text-sm font-medium mb-3">Actions</p>
+                    <div className="flex flex-wrap gap-3">
+                      {orders.status?.toLowerCase() === "pending" && (
+                        <Button
+                          onClick={() => handleUpdateStatus("processing")}
+                          disabled={isUpdating}
+                        >
+                          {isUpdating ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : null}
+                          Mark as Processing
+                        </Button>
+                      )}
+
+                      {orders.status?.toLowerCase() === "processing" && (
+                        <Button
+                          onClick={() => handleUpdateStatus("completed")}
+                          disabled={isUpdating}
+                        >
+                          {isUpdating ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : null}
+                          Mark as Completed
+                        </Button>
+                      )}
+
+                      {["pending", "processing"].includes(
+                        orders.status?.toLowerCase() ?? "",
+                      ) && (
+                        <Button
+                          variant="outline"
+                          className="text-red-600 hover:text-red-700 border-red-200 hover:bg-red-50"
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                "Are you sure you want to cancel this order? This cannot be undone.",
+                              )
+                            ) {
+                              handleUpdateStatus("cancelled");
+                            }
+                          }}
+                          disabled={isUpdating}
+                        >
+                          Cancel Order
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </CardContent>

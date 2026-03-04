@@ -6,9 +6,14 @@ import {
   SelectValue,
 } from "./ui/select";
 
-const StatusFilter = () => {
+interface StatusFilterProps {
+  statusFilter: string;
+  setStatusFilter: (value: string) => void;
+}
+
+const StatusFilter = ({ statusFilter, setStatusFilter }: StatusFilterProps) => {
   return (
-    <Select>
+    <Select value={statusFilter} onValueChange={setStatusFilter}>
       <SelectTrigger className="w-[160px]">
         <SelectValue placeholder="All Statuses" />
       </SelectTrigger>
