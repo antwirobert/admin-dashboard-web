@@ -19,13 +19,14 @@ import { useNotificationProvider } from "./components/refine-ui/notification/use
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 
 import { Layout } from "./components/refine-ui/layout/layout";
-import Dashboard from "./pages/dashboard";
-import { Home } from "lucide-react";
+import { Home, ShoppingCart } from "lucide-react";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import { authProvider } from "./providers/auth";
 import OrdersList from "./pages/orders/list";
 import { dataProvider } from "./providers/data";
+import Dashboard from "./pages/dashboard";
+import OrdersShow from "./pages/orders/show";
 
 function App() {
   return (
@@ -52,7 +53,8 @@ function App() {
                 {
                   name: "orders",
                   list: "/orders",
-                  meta: { label: "Orders" },
+                  show: "/orders/show/:id",
+                  meta: { label: "Orders", icon: <ShoppingCart /> },
                 },
               ]}
             >
@@ -77,7 +79,10 @@ function App() {
                   }
                 >
                   <Route index element={<Dashboard />} />
-                  <Route path="/orders" element={<OrdersList />} />
+                  <Route path="orders">
+                    <Route index element={<OrdersList />} />
+                    <Route path="show/:id" element={<OrdersShow />} />
+                  </Route>
                 </Route>
               </Routes>
               <Toaster />

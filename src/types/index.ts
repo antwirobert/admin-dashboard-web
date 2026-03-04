@@ -35,3 +35,7 @@ export type ListResponse<T = unknown> = {
     totalPages: number;
   };
 };
+
+export type GetOneResponse<T = unknown> = {
+  data: T;
+};
