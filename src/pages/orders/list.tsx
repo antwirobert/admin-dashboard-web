@@ -138,8 +138,8 @@ const OrdersList = () => {
         },
 
         {
-          id: "updatedAt",
-          accessorKey: "updatedAt",
+          id: "createdAt",
+          accessorKey: "createdAt",
           header: "Date",
           size: 180,
           cell: ({ getValue }) => {

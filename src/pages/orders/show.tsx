@@ -152,8 +152,18 @@ const OrdersShow = () => {
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Created</span>
                   <span className="font-medium">
-                    {orders?.createdAt
+                    {orders?.updatedAt
                       ? format(new Date(orders.createdAt), "PPPp")
+                      : "—"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Last Updated
+                  </span>
+                  <span className="font-medium">
+                    {orders?.updatedAt
+                      ? format(new Date(orders.updatedAt), "PPPp")
                       : "—"}
                   </span>
                 </div>
