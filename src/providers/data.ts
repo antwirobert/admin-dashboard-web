@@ -36,7 +36,7 @@ const options: CreateDataProviderOptions = {
     getTotalCount: async (response) => {
       const payload: ListResponse = await response.json();
 
-      return payload.pagination.toal ?? payload.data.length ?? 0;
+      return payload.pagination.total ?? payload.data.length ?? 0;
     },
   },
   getOne: {

@@ -31,7 +31,7 @@ export type ListResponse<T = unknown> = {
   pagination: {
     page: number;
     limit: number;
-    toal: number;
+    total: number;
     totalPages: number;
   };
 };
